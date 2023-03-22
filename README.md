@@ -1,4 +1,4 @@
-# SaintOps | A DevOps tools dockerfile
+# SaintOps | A DevOps toolbelt dockerfile
 
 This docker image contains some common tools used for working with Kubernetes and AWS. 
 
