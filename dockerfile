@@ -4,7 +4,7 @@ FROM almalinux:9.1
 RUN dnf update -y
 
 # Install common tools
-RUN dnf install which vim unzip -y
+RUN dnf install which vim tree unzip -y
 
 # Install kubectl
 RUN curl -LO https://dl.k8s.io/release/v1.26.0/bin/linux/amd64/kubectl \
@@ -41,5 +41,3 @@ RUN curl -L https://github.com/ahmetb/kubectx/archive/v0.4.0.tar.gz | tar xz \
 ENV KUBE_EDITOR vim
 
 ENTRYPOINT ["bash"]
-
-
