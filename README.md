@@ -1,4 +1,4 @@
-# SaintOps | A DevOps toolbelt dockerfile
+# SaintOps | A DevOps toolbelt
 
 This docker image contains some common tools used for working with Kubernetes and AWS. 
 
@@ -8,9 +8,9 @@ A concept inspired by [Jessie Frazelle](https://github.com/jessfraz/dockerfiles)
 docker run -it --rm --network=host -v $PWD:/work -v ~/.kube:/root/.kube --workdir /work saintops:v1 
 
 # Tools
-Kubectl
-Helm
-AWS
-Terraform
-Kubectx
-Kubens
+- Kubectl
+- Helm
+- AWS CLI
+- Terraform
+- Kubectx
+- Kubens
