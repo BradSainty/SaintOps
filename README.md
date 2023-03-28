@@ -10,7 +10,9 @@ docker run -it --rm --network=host -v $PWD:/work -v ~/.kube:/root/.kube --workdi
 # Tools
 - Kubectl
 - Helm
-- AWS CLI
-- Terraform
 - Kubectx
 - Kubens
+- AWS CLI
+- Guthub CLI
+- Terraform
+
