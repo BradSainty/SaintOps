@@ -13,6 +13,6 @@ docker run -it --rm --network=host -v $PWD:/work -v ~/.kube:/root/.kube --workdi
 - Kubectx
 - Kubens
 - AWS CLI
-- Guthub CLI
+- Github CLI
 - Terraform
 
