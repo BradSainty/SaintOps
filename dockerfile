@@ -1,19 +1,41 @@
-FROM almalinux:9.1
+FROM alpine:latest
 
 # Update Image
-RUN dnf update -y
+RUN apk update
 
 # Install common tools
-RUN dnf install which vim tree unzip ncurses git -y
+RUN apk add --no-cache curl bash vim tree unzip ncurses git
 
-ENV KUBECTL_VERSION=1.26.0
+# Versioning
+ENV KUBECTL_VERSION=v1.29.0
+ENV KUBELOGIN_VERSION=v1.28.0
+ENV KUBECTX_VERSION=0.9.5
+ENV HELM_VERSION=3.14.3
+ENV TF_VERSION=1.7.5
+
+ENV KUBE_EDITOR=vim
+ENV KUBECONFIG=/root/.kube/kubeconfig.yml
 
 # Install kubectl
-RUN curl -LO https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl \
+RUN curl -LO https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl \
     && chmod +x ./kubectl \
     && mv ./kubectl /usr/local/bin/
 
-ENV HELM_VERSION=3.10.1
+# Install kubelogin
+RUN curl -LO https://github.com/int128/kubelogin/releases/download/${KUBELOGIN_VERSION}/kubelogin_linux_amd64.zip \
+    && unzip kubelogin_linux_amd64.zip \
+    && mv kubelogin /usr/local/bin/kubectl-oidc_login \
+    && rm kubelogin_linux_amd64.zip
+
+# Install Kubens & Kubectx
+RUN curl -L https://github.com/ahmetb/kubectx/archive/v${KUBECTX_VERSION}.tar.gz | tar xz \
+    && cd ./kubectx-${KUBECTX_VERSION} \
+    && mv kubens kubectx /usr/local/bin/ \
+    && chmod +x /usr/local/bin/kubectx /usr/local/bin/kubens \
+    && cat completion/kubectx.bash >> ~/.bashrc \
+    && cat completion/kubens.bash >> ~/.bashrc \
+    && cd ../ \
+    && rm -rf ./kubectx-${KUBECTX_VERSION}
 
 # Install Helm
 RUN curl -o helm.tar.gz -LO https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz \
@@ -21,17 +43,7 @@ RUN curl -o helm.tar.gz -LO https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd6
     && rm helm.tar.gz \
     && mv ./linux-amd64/helm /usr/local/bin/ \
     && rm -rf linux-amd64 \
-    && chmod +x /usr/local/bin/helm
-
-# Install Kubens & Kubectx
-RUN curl -L https://github.com/ahmetb/kubectx/archive/v0.4.0.tar.gz | tar xz \
-    && cd ./kubectx-0.4.0 \
-    && mv kubens kubectx utils.bash /usr/local/bin/ \
-    && chmod +x /usr/local/bin/kubectx /usr/local/bin/kubens \
-    && cat completion/kubectx.bash >> ~/.bashrc \
-    && cat completion/kubens.bash >> ~/.bashrc \
-    && cd ../ \
-    && rm -fr ./kubectx-0.4.0
+    && chmod +x /usr/local/bin/helm  
 
 # Install AWS CLI
 RUN curl https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip \
@@ -39,20 +51,11 @@ RUN curl https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zi
     && rm awscliv2.zip \
     && ./aws/install
 
-# Install Github CLI
-RUN curl -L https://github.com/cli/cli/releases/download/v2.25.1/gh_2.25.1_linux_386.rpm -o ghcli.rpm \
-    && dnf install ghcli.rpm -y \
-    && rm -rf ghcli.rpm
-
-ENV TF_VERSION=1.4.2
-
 # Install Terraform
 RUN curl https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip -o terraform.zip \
     && unzip terraform.zip \
     && rm terraform.zip \
     && chmod +x terraform \
     && mv terraform /usr/local/bin/
-
-ENV KUBE_EDITOR vim
 
 ENTRYPOINT ["bash"]
