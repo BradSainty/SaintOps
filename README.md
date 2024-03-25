@@ -12,6 +12,7 @@ docker run -it --rm --network=host -v $PWD:/work -v ~/.aws:/root/.aws -v ~/.kube
 - Kubelogin
 - Kubectx
 - Kubens
+- Kompose
 - Helm
 - AWS CLI
 - Terraform

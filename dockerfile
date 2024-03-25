@@ -10,6 +10,7 @@ RUN apk add --no-cache curl bash vim tree unzip ncurses git
 ENV KUBECTL_VERSION=v1.29.0
 ENV KUBELOGIN_VERSION=v1.28.0
 ENV KUBECTX_VERSION=0.9.5
+ENV KOMPOSE_VERSION=v1.32.0
 ENV HELM_VERSION=3.14.3
 ENV TF_VERSION=1.7.5
 
@@ -36,6 +37,11 @@ RUN curl -L https://github.com/ahmetb/kubectx/archive/v${KUBECTX_VERSION}.tar.gz
     && cat completion/kubens.bash >> ~/.bashrc \
     && cd ../ \
     && rm -rf ./kubectx-${KUBECTX_VERSION}
+
+# Install Kompose
+RUN curl -L https://github.com/kubernetes/kompose/releases/download/${KOMPOSE_VERSION}/kompose-linux-amd64 -o kompose \
+    && chmod +x kompose \
+    && mv ./kompose /usr/local/bin/kompose
 
 # Install Helm
 RUN curl -o helm.tar.gz -LO https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz \
