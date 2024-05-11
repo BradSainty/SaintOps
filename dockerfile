@@ -15,7 +15,6 @@ ENV HELM_VERSION=3.14.3
 ENV TF_VERSION=1.7.5
 
 ENV KUBE_EDITOR=vim
-ENV KUBECONFIG=/root/.kube/kubeconfig.yml
 
 # Install kubectl
 RUN curl -LO https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl \
