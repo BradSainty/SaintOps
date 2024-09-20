@@ -3,16 +3,18 @@ FROM alpine:latest
 # Update Image
 RUN apk update
 
-# Install common tools
-RUN apk add --no-cache curl bash vim tree unzip ncurses git
+# Install base tools
+RUN apk add --no-cache curl vim tree unzip ncurses git bash
 
-# Versioning
-ENV KUBECTL_VERSION=v1.29.0
-ENV KUBELOGIN_VERSION=v1.28.0
+# Set Versioning
+ENV KUBECTL_VERSION=v1.30.5
+ENV KUBELOGIN_VERSION=v1.29.0
 ENV KUBECTX_VERSION=0.9.5
-ENV KOMPOSE_VERSION=v1.32.0
-ENV HELM_VERSION=3.14.3
-ENV TF_VERSION=1.7.5
+ENV KUBESEAL_VERSION=0.27.1
+ENV KUBECOLOR_VERSION=0.4.0
+ENV K9S_VERSION=v0.32.5
+ENV HELM_VERSION=3.16.1
+ENV TF_VERSION=1.9.6
 
 ENV KUBE_EDITOR=vim
 
@@ -27,7 +29,7 @@ RUN curl -LO https://github.com/int128/kubelogin/releases/download/${KUBELOGIN_V
     && mv kubelogin /usr/local/bin/kubectl-oidc_login \
     && rm kubelogin_linux_amd64.zip
 
-# Install Kubens & Kubectx
+# Install kubens & kubectx
 RUN curl -L https://github.com/ahmetb/kubectx/archive/v${KUBECTX_VERSION}.tar.gz | tar xz \
     && cd ./kubectx-${KUBECTX_VERSION} \
     && mv kubens kubectx /usr/local/bin/ \
@@ -37,10 +39,24 @@ RUN curl -L https://github.com/ahmetb/kubectx/archive/v${KUBECTX_VERSION}.tar.gz
     && cd ../ \
     && rm -rf ./kubectx-${KUBECTX_VERSION}
 
-# Install Kompose
-RUN curl -L https://github.com/kubernetes/kompose/releases/download/${KOMPOSE_VERSION}/kompose-linux-amd64 -o kompose \
-    && chmod +x kompose \
-    && mv ./kompose /usr/local/bin/kompose
+# Install kubeseal
+RUN curl -Lo kubeseal.tar.gz https://github.com/bitnami-labs/sealed-secrets/releases/download/v${KUBESEAL_VERSION}/kubeseal-${KUBESEAL_VERSION}-linux-amd64.tar.gz \
+    && tar -xzf kubeseal.tar.gz kubeseal \
+    && mv kubeseal /usr/local/bin/ \
+    && rm -rf kubeseal.tar.gz
+
+# Install kubecolor
+RUN curl -L https://github.com/kubecolor/kubecolor/releases/download/v${KUBECOLOR_VERSION}/kubecolor_${KUBECOLOR_VERSION}_linux_amd64.tar.gz  | tar xz \
+    && mv kubecolor /usr/local/bin/ \
+    && rm LICENSE README.md \
+    && echo "alias kubectl='/usr/local/bin/kubecolor'" >> ~/.bashrc \
+    && echo "alias k='/usr/local/bin/kubecolor'" >> ~/.bashrc
+    
+# Install K9s
+RUN curl -Lo k9s.tar.gz curl -Lo k9s.tar.gz https://github.com/derailed/k9s/releases/download/${K9S_VERSION}/k9s_Linux_amd64.tar.gz  \
+    && tar -xzf k9s.tar.gz \
+    && mv k9s /usr/local/bin/ \
+    && rm -rf k9s.tar.gz
 
 # Install Helm
 RUN curl -o helm.tar.gz -LO https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz \
@@ -63,4 +79,4 @@ RUN curl https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_V
     && chmod +x terraform \
     && mv terraform /usr/local/bin/
 
-ENTRYPOINT ["bash"]
+ENTRYPOINT ["/bin/bash"]

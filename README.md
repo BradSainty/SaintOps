@@ -18,7 +18,8 @@ docker run -it --rm \
 - Kubelogin
 - Kubectx
 - Kubens
-- Kompose
+- Kubecolor
+- K9s
 - Helm
 - AWS CLI
 - Terraform
