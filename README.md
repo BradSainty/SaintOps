@@ -7,6 +7,7 @@ This concept was inspired by [Jessie Frazelle's](https://github.com/jessfraz/doc
 By running applications inside containers, you can maintain a powerful set of portable and consistent tools across different systems on demand.
 
 # Run Command
+```
 docker run -it --rm \
   --network host \
   -v "$PWD":/work \
@@ -14,6 +15,7 @@ docker run -it --rm \
   -v "$HOME/.kube":/root/.kube \
   --workdir /work \
   ghcr.io/bradsainty/saintops:v2.0
+  ```
 
 # Tools
 - Kubectl
