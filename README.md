@@ -1,8 +1,10 @@
 # SaintOps | A DevOps toolbelt
 
-This docker image contains some common tools used for working with Kubernetes and AWS. 
+This Docker image serves as a comprehensive DevOps toolbelt, pre-configured with essential tools for managing Kubernetes, AWS and IaC. 
 
-A concept inspired by [Jessie Frazelle](https://github.com/jessfraz/dockerfiles) - you don't need to install separate tools on your machine, this image allows you to work with a set of tools from a single docker run command on any machine.
+This concept was inspired by [Jessie Frazelle's](https://github.com/jessfraz/dockerfiles) containerised workflow philosophy. 
+
+By running applications inside containers, you can maintain a powerful set of portable and consistent tools across different systems on demand.
 
 # Run Command
 docker run -it --rm \
@@ -11,7 +13,7 @@ docker run -it --rm \
   -v "$HOME/.aws":/root/.aws \
   -v "$HOME/.kube":/root/.kube \
   --workdir /work \
-  saintops:v2
+  ghcr.io/bradsainty/saintops:v2.0
 
 # Tools
 - Kubectl
